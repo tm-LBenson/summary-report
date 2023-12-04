@@ -1,58 +1,23 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Student Progress Summary</title>
+    <title>Course Summary</title>
+    <link rel="stylesheet" href="bootstrap.min.css" />
   </head>
-  <body>
-    <div>
-      <label for="preworkCount">Number of Prework Assignments:</label>
-      <input type="number" id="preworkCount" min="0" value="0" />
-    </div>
-    <div>
-      <label for="weekCount">Number of Weeks:</label>
-      <select id="weekCount">
-        <option value="1">1 Week</option>
-        <option value="2">2 Weeks</option>
-        <option value="3">3 Weeks</option>
-        <option value="4">4 Weeks</option>
-        <option value="5">5 Week</option>
-        <option value="6">6 Weeks</option>
-        <option value="7">7 Weeks</option>
-        <option value="8">8 Weeks</option>
-        <option value="9">9 Week</option>
-        <option value="10">10 Weeks</option>
-        <option value="11">11 Weeks</option>
-        <option value="12">12 Weeks</option>
-        <!-- Add more options if needed -->
-      </select>
-    </div>
-    <div>
-      <label for="headings">Headings:</label>
-      <textarea
-        id="headings"
-        placeholder="Paste column headings here"
-      ></textarea>
-    </div>
-    <div>
-      <label for="studentData">Student Data:</label>
-      <textarea
-        id="studentData"
-        placeholder="Paste student data here"
-      ></textarea>
-    </div>
-    <div>
-      <label for="attendanceData">Attendance Data:</label>
-      <textarea
-        id="attendanceData"
-        placeholder="Paste attendance data here"
-      ></textarea>
-    </div>
-    <button onclick="processData()">Submit</button>
-
-    <div id="summaryPage">
-      <!-- Summary will be displayed here -->
-    </div>
-
+  <body class="container mt-3">
+    <textarea
+      id="courseData"
+      class="form-control mb-3"
+      placeholder="Paste entire spreadsheet data here"
+    ></textarea>
+    <button id="processDataButton" class="btn btn-primary mb-3">
+      Process Data
+    </button>
+    <button id="toggleStudentsButton" class="btn btn-secondary mb-3">
+      Hide Students
+    </button>
+    <div id="studentList" class="mb-3"></div>
+    <div id="studentSummary"></div>
     <script src="script.js"></script>
   </body>
 </html>
