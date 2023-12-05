@@ -18,36 +18,51 @@ function processData() {
 function extractStudentData(dataRows, weekAndPreworkHeadings, topicHeadings) {
   let students = [];
 
+  // Find the starting index for attendance which comes after all coursework, including pre-work.
+  let attendanceStartIndex = topicHeadings.findIndex((heading) =>
+    heading.toLowerCase().includes('attendance')
+  );
+  let totalCourseworkCount = weekAndPreworkHeadings.length; // Total number of coursework items including pre-work
+
   dataRows.forEach((row) => {
     if (row.length > 2 && row[0] !== '') {
       let coursework = [];
       let attendance = [];
 
-      for (let i = 0; i < weekAndPreworkHeadings.length; i++) {
-        if (
-          weekAndPreworkHeadings[i].trim() === '' &&
-          topicHeadings[i].trim() === ''
-        ) {
-          continue; // Skip columns where both headings are blank
-        }
-
-        if (topicHeadings[i].toLowerCase() === 'attendance') {
-          attendance.push(row[i + 2]); // +2 to adjust for name and email columns
-        } else {
+      // Process coursework and pre-work data
+      for (let i = 0; i < totalCourseworkCount; i++) {
+        if (weekAndPreworkHeadings[i].trim() !== '') {
           coursework.push({
             type: weekAndPreworkHeadings[i],
             topic: topicHeadings[i],
-            result: row[i + 2],
+            result: row[i + 2], // +2 to skip the name and email columns
           });
         }
       }
+
+      // Process attendance data
+      for (let i = 0; i < topicHeadings.length; i++) {
+        if (topicHeadings[i].toLowerCase().includes('attendance')) {
+          // +2 to skip the name and email columns, and adjust index by subtracting pre-work count
+          attendance.push(row[i + 2] || '0 of 0');
+        }
+      }
+
+      // Slice the attendance array to remove the pre-work attendance placeholders
+      attendance = attendance.slice(
+        coursework.filter((cw) => !cw.type.toLowerCase().includes('pre-work'))
+          .length
+      );
+
+      // Assuming notes are in the last column, following attendance
+      let notes = row[row.length - 1] || '';
 
       let student = {
         name: row[0],
         email: row[1],
         coursework: coursework,
         attendance: attendance,
-        notes: row[row.length - 1],
+        notes: notes,
       };
       students.push(student);
     }
@@ -72,6 +87,7 @@ function displayStudentList(students) {
     studentListDiv.appendChild(button);
   });
 }
+
 function displayStudentSummary(student) {
   const summaryDiv = document.getElementById('studentSummary');
   let totalCatchUpTime = 0;
