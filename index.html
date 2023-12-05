@@ -3,11 +3,20 @@
   <head>
     <title>Course Summary</title>
     <link rel="stylesheet" href="bootstrap.min.css" />
+    <style>
+      #studentList {
+        display: flex;
+        flex-direction: column;
+      }
+      #studentList > button {
+        width: 20%;
+      }
+    </style>
   </head>
   <body class="container mt-3">
     <textarea
       id="courseData"
-      class="form-control mb-3"
+      class="form-control mb-3 w-50"
       placeholder="Paste entire spreadsheet data here"
     ></textarea>
     <button id="processDataButton" class="btn btn-primary mb-3">

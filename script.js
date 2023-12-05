@@ -64,7 +64,12 @@ function displayStudentList(students) {
     const button = document.createElement('button');
     button.classList.add('btn', 'btn-secondary', 'm-2');
     button.innerText = student.name;
-    button.onclick = () => displayStudentSummary(student);
+
+    button.style.height = '38px';
+    button.onclick = () => {
+      toggleStudentList();
+      return displayStudentSummary(student);
+    };
     studentListDiv.appendChild(button);
   });
 }
@@ -171,7 +176,7 @@ function toggleStudentList() {
   const studentListDiv = document.getElementById('studentList');
   const toggleButton = document.getElementById('toggleStudentsButton');
   if (studentListDiv.style.display === 'none') {
-    studentListDiv.style.display = 'block';
+    studentListDiv.style.display = 'flex';
     toggleButton.textContent = 'Hide Students';
   } else {
     studentListDiv.style.display = 'none';
