@@ -65,7 +65,6 @@ function displayStudentList(students) {
     button.classList.add('btn', 'btn-secondary', 'm-2');
     button.innerText = student.name;
 
-    button.style.height = '38px';
     button.onclick = () => {
       toggleStudentList();
       return displayStudentSummary(student);

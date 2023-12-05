@@ -1,0 +1,10 @@
+:root {
+  font-size: 25px;
+}
+#studentList {
+  display: flex;
+  flex-direction: column;
+}
+#studentList > button {
+  width: 20%;
+}
