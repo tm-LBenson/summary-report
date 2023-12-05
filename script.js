@@ -167,6 +167,23 @@ function estimateCatchUpTime(completed, total, type) {
   return assignmentsLeft * timePerAssignment; // Total catch up time
 }
 
+function toggleStudentList() {
+  const studentListDiv = document.getElementById('studentList');
+  const toggleButton = document.getElementById('toggleStudentsButton');
+  if (studentListDiv.style.display === 'none') {
+    studentListDiv.style.display = 'block';
+    toggleButton.textContent = 'Hide Students';
+  } else {
+    studentListDiv.style.display = 'none';
+    toggleButton.textContent = 'Show Students';
+  }
+}
+
+// Add the event listener to the toggle button
+document
+  .getElementById('toggleStudentsButton')
+  .addEventListener('click', toggleStudentList);
+
 // Add the event listener to the process button
 document
   .getElementById('processDataButton')
