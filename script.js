@@ -29,6 +29,10 @@ function extractStudentData(dataRows, weekAndPreworkHeadings, topicHeadings) {
   );
 
   dataRows.forEach((row) => {
+    // Remove empty cells from the end of the row
+    while (row.length > 0 && row[row.length - 1].trim() === '') {
+      row.pop();
+    }
     if (row.length > 2 && row[0] !== '') {
       let coursework = [];
       let attendanceData = row.slice(attendanceStartIndex + 2); // +2 to adjust for student name and email
