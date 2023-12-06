@@ -18,53 +18,54 @@ function processData() {
 function extractStudentData(dataRows, weekAndPreworkHeadings, topicHeadings) {
   let students = [];
 
-  // Find the starting index for attendance which comes after all coursework, including pre-work.
+  // Find where the actual weeks start (excluding pre-work).
+  let actualWeekStartIndex = weekAndPreworkHeadings.findIndex((heading) =>
+    heading.toLowerCase().includes('week 1')
+  );
+
+  // Find where the attendance data starts.
   let attendanceStartIndex = topicHeadings.findIndex((heading) =>
     heading.toLowerCase().includes('attendance')
   );
-  let totalCourseworkCount = weekAndPreworkHeadings.length; // Total number of coursework items including pre-work
 
   dataRows.forEach((row) => {
     if (row.length > 2 && row[0] !== '') {
       let coursework = [];
-      let attendance = [];
+      let attendanceData = row.slice(attendanceStartIndex + 2); // +2 to adjust for student name and email
 
       // Process coursework and pre-work data
-      for (let i = 0; i < totalCourseworkCount; i++) {
-        if (weekAndPreworkHeadings[i].trim() !== '') {
-          coursework.push({
-            type: weekAndPreworkHeadings[i],
-            topic: topicHeadings[i],
-            result: row[i + 2], // +2 to skip the name and email columns
-          });
-        }
+      for (let i = 0; i < actualWeekStartIndex; i++) {
+        coursework.push({
+          type: weekAndPreworkHeadings[i],
+          topic: topicHeadings[i],
+          result: row[i + 2], // +2 to skip the name and email columns
+          attendance: 'N/A', // Pre-work doesn't have attendance
+        });
       }
 
-      // Process attendance data
-      for (let i = 0; i < topicHeadings.length; i++) {
-        if (topicHeadings[i].toLowerCase().includes('attendance')) {
-          // +2 to skip the name and email columns, and adjust index by subtracting pre-work count
-          attendance.push(row[i + 2] || '0 of 0');
-        }
+      // Process weekly coursework data
+      for (
+        let i = actualWeekStartIndex, j = 0;
+        i < attendanceStartIndex;
+        i++, j++
+      ) {
+        coursework.push({
+          type: weekAndPreworkHeadings[i],
+          topic: topicHeadings[i],
+          result: row[i + 2], // +2 to skip the name and email columns
+          attendance: row[attendanceStartIndex + 2 + j] || '0 of 0', // Align attendance with coursework
+        });
       }
 
-      // Slice the attendance array to remove the pre-work attendance placeholders
-      attendance = attendance.slice(
-        coursework.filter((cw) => !cw.type.toLowerCase().includes('pre-work'))
-          .length
-      );
-
-      // Assuming notes are in the last column, following attendance
+      // Assuming notes are in the last column
       let notes = row[row.length - 1] || '';
 
-      let student = {
+      students.push({
         name: row[0],
         email: row[1],
         coursework: coursework,
-        attendance: attendance,
         notes: notes,
-      };
-      students.push(student);
+      });
     }
   });
 
@@ -92,7 +93,6 @@ function displayStudentSummary(student) {
   const summaryDiv = document.getElementById('studentSummary');
   let totalCatchUpTime = 0;
   let totalAttendance = 0;
-  let notesContent = ''; // Variable to hold notes content
 
   summaryDiv.innerHTML = `
         <div class="container">
@@ -100,71 +100,57 @@ function displayStudentSummary(student) {
             <p>Email: ${student.email}</p>
             <div class="row">`;
 
-  student.coursework.forEach((course, index) => {
-    if (course.type.toLowerCase() === 'notes:') {
-      // Save the notes content and do not create a card for it
-      notesContent = course.result;
-      return; // Skip the iteration for notes
-    }
-
-    if (course.result.trim() === '') {
-      // If there's no result, don't display this course
-      return;
-    }
-
-    const attendanceData = student.attendance[index] || '0 of 0';
-    const [attended, totalDays] = attendanceData.split(' of ').map(Number);
-    totalAttendance += attended; // Add attended days to total
-
-    let catchUpTime = 0;
+  student.coursework.forEach((course) => {
+    // If no result, skip rendering this course
     if (
-      course.result !== 'PASS' &&
-      course.result !== 'NOT GRADED' &&
-      course.result.trim() !== ''
-    ) {
-      let [completed, total] =
-        course.result === '0'
-          ? [0, course.type.toLowerCase().includes('pre-work') ? 1 : 6]
-          : course.result.split(' out of ').map(Number);
-      catchUpTime = estimateCatchUpTime(completed, total, course.type);
-      totalCatchUpTime += isNaN(catchUpTime) ? 0 : catchUpTime; // Add catch-up time to total
+      course.result.trim() === '' &&
+      course.type.toLowerCase().indexOf('week') !== -1
+    )
+      return;
+
+    // Calculate attendance for courses other than pre-work
+    let attendance = course.attendance;
+    let catchUpTime;
+    if (attendance !== 'N/A') {
+      let [attended, outOf] = attendance.split(' of ').map(Number);
+      totalAttendance += attended;
+      // Calculate catch-up time
+      catchUpTime = course.result.includes(' out of ')
+        ? estimateCatchUpTime(...course.result.split(' out of ').map(Number))
+        : course.result === '0'
+        ? 60
+        : 0; // If '0', assume 60 minutes for catch-up time
+      totalCatchUpTime += catchUpTime;
+      attendance = `${attended} of ${outOf}`;
     }
 
-    // Create cards for each week's coursework and attendance
-
+    // Render the course card
     summaryDiv.innerHTML += `
-                <div class="col-md-6 mb-3">
-                    <div class="card">
-                        <div class="card-header">${course.type} (${
-      course.topic
-    })</div>
-                        <div class="card-body">
-                            <p class="card-text">Result: ${course.result}</p>
-                            <p class="card-text">Attendance: ${attendanceData}</p>
-                            ${
-                              catchUpTime
-                                ? `<p class="card-text">Estimated catch-up time: ${catchUpTime} minutes</p>`
-                                : ''
-                            }
-                        </div>
-                    </div>
-                </div>`;
+      <div class="col-md-6 mb-3">
+        <div class="card">
+          <div class="card-header">${course.type} (${course.topic})</div>
+          <div class="card-body">
+            <p class="card-text">Result: ${course.result}</p>
+            <p class="card-text">Attendance: ${attendance}</p>
+            ${
+              attendance !== 'N/A'
+                ? `<p class="card-text">Estimated catch-up time: ${catchUpTime} minutes</p>`
+                : ''
+            }
+          </div>
+        </div>
+      </div>`;
   });
 
-  // After processing coursework, create one card for Notes and Summary
-  const catchUpTimeString = totalCatchUpTime
-    ? `${totalCatchUpTime} minutes`
-    : 'N/A';
-  const attendanceString = `${totalAttendance} days`;
-
+  // Add notes and summary
   summaryDiv.innerHTML += `
     <div class="col-md-12 mb-3">
       <div class="card">
         <div class="card-header">Notes and Summary</div>
         <div class="card-body">
-          <p class="card-text">${notesContent}</p>
-          <p class="card-text">Total Estimated Catch-Up Time: ${catchUpTimeString}</p>
-          <p class="card-text">Total Attendance: ${attendanceString}</p>
+          <p class="card-text">${student.notes}</p>
+          <p class="card-text">Total Estimated Catch-Up Time: ${totalCatchUpTime} minutes</p>
+          <p class="card-text">Total Attendance: ${totalAttendance} days</p>
         </div>
       </div>
     </div>
@@ -173,16 +159,9 @@ function displayStudentSummary(student) {
   summaryDiv.style.display = 'block';
 }
 
-function estimateCatchUpTime(completed, total, type) {
+function estimateCatchUpTime(completed, total) {
   const assignmentsLeft = total - completed;
-  if (assignmentsLeft === 0) return 'N/A'; // No catch-up time needed if there are no assignments left
-
-  // For pre-work, if no assignments are completed, assume 1 assignment with 60 minutes
-  if (type.toLowerCase().includes('pre-work') && completed === 0) {
-    return 60;
-  }
-
-  // For regular assignments, calculate the total time based on 45 minutes each
+  if (assignmentsLeft === 0) return 0; // No catch-up time needed if there are no assignments left
   const timePerAssignment = 45; // Average time per assignment
   return assignmentsLeft * timePerAssignment; // Total catch up time
 }
