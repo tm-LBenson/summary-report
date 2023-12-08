@@ -1,79 +1,24 @@
 'use strict';
+import {parse} from "https://www.unpkg.com/csv-parse@5.5.3/dist/esm/sync.js";
+import { parseSheet } from "./parse-sheet.js";
+
 
 function processData() {
   const rawData = document.getElementById('courseData').value;
-  const rows = rawData.split('\n').map((row) => row.split('\t'));
+  const input = rawData;
+  const options = {delimiter: "\t"};
+  const data = parse(input, options);
+  console.log(data);
+  const weekAndPreworkHeadings = data[0];
+  const topicHeadings = data[1];
+  //const rows = rawData.split('\n').map((row) => row.split('\t'));
+  // const weekAndPreworkHeadings = rows[3].slice(2); // Starting from C4
+  // const topicHeadings = rows[4].slice(2); // Starting from C5
+  const students = parseSheet(data)
+  console.log(students);
 
-  const weekAndPreworkHeadings = rows[3].slice(2); // Starting from C4
-  const topicHeadings = rows[4].slice(2); // Starting from C5
-  const students = extractStudentData(
-    rows.slice(5),
-    weekAndPreworkHeadings,
-    topicHeadings
-  ); // Student data starts from row 6
 
   displayStudentList(students);
-}
-
-function extractStudentData(dataRows, weekAndPreworkHeadings, topicHeadings) {
-  let students = [];
-
-  // Find where the actual weeks start (excluding pre-work).
-  let actualWeekStartIndex = weekAndPreworkHeadings.findIndex((heading) =>
-    heading.toLowerCase().includes('week 1')
-  );
-
-  // Find where the attendance data starts.
-  let attendanceStartIndex = topicHeadings.findIndex((heading) =>
-    heading.toLowerCase().includes('attendance')
-  );
-
-  dataRows.forEach((row) => {
-    // Remove empty cells from the end of the row
-    while (row.length > 0 && row[row.length - 1].trim() === '') {
-      row.pop();
-    }
-    if (row.length > 2 && row[0] !== '') {
-      let coursework = [];
-      let attendanceData = row.slice(attendanceStartIndex + 2); // +2 to adjust for student name and email
-
-      // Process coursework and pre-work data
-      for (let i = 0; i < actualWeekStartIndex; i++) {
-        coursework.push({
-          type: weekAndPreworkHeadings[i],
-          topic: topicHeadings[i],
-          result: row[i + 2], // +2 to skip the name and email columns
-          attendance: 'N/A', // Pre-work doesn't have attendance
-        });
-      }
-
-      // Process weekly coursework data
-      for (
-        let i = actualWeekStartIndex, j = 0;
-        i < attendanceStartIndex;
-        i++, j++
-      ) {
-        coursework.push({
-          type: weekAndPreworkHeadings[i],
-          topic: topicHeadings[i],
-          result: row[i + 2], // +2 to skip the name and email columns
-          attendance: row[attendanceStartIndex + 2 + j] || '0 of 0', // Align attendance with coursework
-        });
-      }
-
-      // Assuming notes are in the last column
-      let notes = row[row.length - 1] || '';
-
-      students.push({
-        name: row[0],
-        email: row[1],
-        coursework: coursework,
-        notes: notes,
-      });
-    }
-  });
-
-  return students;
 }
 
 function displayStudentList(students) {
@@ -83,7 +28,7 @@ function displayStudentList(students) {
   students.forEach((student) => {
     const button = document.createElement('button');
     button.classList.add('btn', 'btn-secondary', 'm-2');
-    button.innerText = student.name;
+    button.innerText = student.studentName;
 
     button.onclick = () => {
       toggleStudentList();
@@ -100,20 +45,23 @@ function displayStudentSummary(student) {
 
   summaryDiv.innerHTML = `
         <div class="container">
-            <h2 class="mt-4">${student.name}</h2>
-            <p>Email: ${student.email}</p>
+            <h2 class="mt-4">${student.studentName}</h2>
+            <p>Email: ${student.studentEmail}</p>
             <div class="row">`;
 
-  student.coursework.forEach((course) => {
+  student.weeklyReports.forEach((report) => {
     // If no result, skip rendering this course
     if (
-      course.result.trim() === '' &&
-      course.type.toLowerCase().indexOf('week') !== -1
+      !report.topic
     )
       return;
 
     // Calculate attendance for courses other than pre-work
     let attendance = course.attendance;
+    let attendanceText = 'N/A'; 
+    if(attendance) {
+      attendanceText = attendance.grade;
+    }
     let catchUpTime;
     if (attendance !== 'N/A') {
       let [attended, outOf] = attendance.split(' of ').map(Number);
