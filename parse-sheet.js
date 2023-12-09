@@ -23,7 +23,7 @@ class GradeWeek {
     this.week = week;
     this.topic = topic;
     this.grade = grade;
-    this.pass = week.grade === 'PASS';
+    this.pass = grade === 'PASS';
     if(!this.pass) {
         const grade = this.grade;
         this.incompleteAssignmentCount = 0;
@@ -78,6 +78,9 @@ class Student {
     const topicHeaders = data.topics.slice(2);
     const weekHeaders = data.weeks.slice(2);
     this.cells = [];
+    this.totalEstimatedMinutesForCatchup = 0;
+    this.totalAttendanceCount = 0;
+    this.maxAttendanceCount = 0;
     for (let i = 0; i < topicHeaders.length; i++) {
       this.cells.push({
         week: weekHeaders[i].trim(),
@@ -97,6 +100,8 @@ class Student {
         if (att.valid) {
           this.attendance.total += att.total;
           this.attendance.attended += att.attended;
+          this.totalAttendanceCount += this.attendance.attended;
+          this.maxAttendanceCount += this.attendance.total;
           this.attendance.record.push(att);
         }
       } else if (GradeWeek.isGradeCell(cell)) {
@@ -116,6 +121,7 @@ class Student {
         attendance: attendanceHash[grade.week],
       };
       const estimatedMinutesForCatchup = calcWeekCatchup(report);
+      this.totalEstimatedMinutesForCatchup+=estimatedMinutesForCatchup;
       report.estimatedMinutesForCatchup = estimatedMinutesForCatchup;
       weeklyReports.push(report);
     }
