@@ -1,3 +1,10 @@
+const catchupTime = {
+    absenceFactor: 120,
+    incompleteFactor: 60,
+    softFail: 120,
+    hardFail: 240
+};
+
 
 class AttendanceWeek {
   constructor({ week, topic, grade }) {
@@ -51,22 +58,20 @@ class GradeWeek {
   }
 }
 
-const incompleteFactor = 60; // minutes
-const absenceFactor = 120;   // minutes
 function calcWeekCatchup({grade, attendance}) {
     let absence = 0;
     if(grade.pass) {
         return 0;
     } else if(grade.grade.toLowerCase() === "soft fail") {
-        return 120;
+        return catchupTime.softFail;
     } else if (grade.grade.toLowerCase() === "hard fail") {
-        return 240;
+        return catchupTime.hardFail;
     }
     if(attendance){
         absence = attendance.total - attendance.attended;
     }
     let incompleteAssignmentCount = grade.incompleteAssignmentCount;
-    const estimatedMinutesForCatchup = absence * absenceFactor + incompleteAssignmentCount * incompleteFactor;
+    const estimatedMinutesForCatchup = absence * catchupTime.absenceFactor + incompleteAssignmentCount * catchupTime.incompleteFactor;
     return estimatedMinutesForCatchup;
 }
 
