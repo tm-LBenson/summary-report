@@ -48,12 +48,9 @@ function displayStudentSummary(student) {
             <h2 class="mt-4">${student.studentName}</h2>
             <p>Email: ${student.studentEmail}</p>
             <div class="row">`;
-  console.log(student);
   student.weeklyReports.forEach((report) => {
-    console.log(report);
     // Render the course card
     const weeklyReport = weeklyReportHTML(report);
-    console.log(html);
     html += weeklyReport;
   });
   const summaryReport = summaryReportHTML(student);
@@ -61,30 +58,8 @@ function displayStudentSummary(student) {
   console.log(summaryDiv);
   html += summaryReport;
   html += `</div>`;
-  console.log(html)
   summaryDiv.innerHTML = html;
-  // Add notes and summary
-  // summaryDiv.innerHTML += `
-  //   <div class="col-md-12 mb-3">
-  //     <div class="card">
-  //       <div class="card-header">Notes and Summary</div>
-  //       <div class="card-body">
-  //         <p class="card-text">${student.notes}</p>
-  //         <p class="card-text">Total Estimated Catch-Up Time: ${totalCatchUpTime} minutes</p>
-  //         <p class="card-text">Total Attendance: ${totalAttendance} days</p>
-  //       </div>
-  //     </div>
-  //   </div>
-  // </div>`;
-
   summaryDiv.style.display = 'block';
-}
-
-function estimateCatchUpTime(completed, total) {
-  const assignmentsLeft = total - completed;
-  if (assignmentsLeft === 0) return 0; // No catch-up time needed if there are no assignments left
-  const timePerAssignment = 45; // Average time per assignment
-  return assignmentsLeft * timePerAssignment; // Total catch up time
 }
 
 function toggleStudentList() {
