@@ -6,19 +6,39 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body class="container mt-3">
+    <!-- Class Selection Dropdown -->
+    <select id="classSelection" class="form-control mb-3 w-50">
+      <option value="">Select Class</option>
+      <!-- Class options will be added here -->
+    </select>
+    <div id="classInputContainer"></div>
+
+    <!-- Button to Add New Class -->
+    <button id="addClassButton" class="btn btn-info mb-3">Add New Class</button>
+
+    <!-- Textarea for Data Input -->
     <textarea
+      required
       id="courseData"
       class="form-control mb-3 w-50"
       placeholder="Paste entire spreadsheet data here"
     ></textarea>
+
+    <!-- Process and Toggle Buttons -->
     <button id="processDataButton" class="btn btn-primary mb-3">
       Process Data
     </button>
     <button id="toggleStudentsButton" class="btn btn-secondary mb-3">
       Hide Students
     </button>
+
+    <!-- Divs for Displaying Data -->
     <div id="studentList" class="mb-3"></div>
     <div id="studentSummary"></div>
-    <script src="script.js" type="module"></script>
+
+
+    <!-- JavaScript File -->
+    <script type="module" src="script.js"></script>
+
   </body>
 </html>
