@@ -11,8 +11,27 @@ function processData() {
     weekAndPreworkHeadings,
     topicHeadings
   ); // Student data starts from row 6
-
+  logDataForAnalysis(students);
   displayStudentList(students);
+}
+
+function logDataForAnalysis(students) {
+  console.log('Students Data:', students);
+
+  // Example: Log aggregated data
+  const courseAnalysis = aggregateCourseData(students);
+  console.log('Course Analysis:', courseAnalysis);
+}
+
+function aggregateCourseData(students) {
+  let allCourses = [];
+  students.forEach((student) => {
+    student.coursework.forEach((course) => {
+      allCourses.push({ ...course, studentName: student.name });
+    });
+  });
+
+  return allCourses;
 }
 
 function extractStudentData(dataRows, weekAndPreworkHeadings, topicHeadings) {
