@@ -3,32 +3,36 @@
  the spreadsheet inserted will be split apart, the data extracted, everything is placed in datastructures that allow the backend to handle it data easily for the DB
 */
 import { displayStudentList } from './uiManagement.js';
-
-export function processData() {
+import { postData } from './postData.js';
+export async function processData() {
   const selectedClass = document.getElementById('classSelection').value;
   if (!selectedClass) {
     alert('Please select a class.');
     return;
   }
+  try {
+    const rawData = document.getElementById('courseData').value;
+    const rows = rawData.split('\n').map((row) => row.split('\t'));
 
-  const rawData = document.getElementById('courseData').value;
-  const rows = rawData.split('\n').map((row) => row.split('\t'));
+    const weekAndPreworkHeadings = rows[3].slice(2); // Starting from C4
+    const topicHeadings = rows[4].slice(2); // Starting from C5
+    const students = extractStudentData(
+      rows.slice(5),
+      weekAndPreworkHeadings,
+      topicHeadings
+    ); // Student data starts from row 6
 
-  const weekAndPreworkHeadings = rows[3].slice(2); // Starting from C4
-  const topicHeadings = rows[4].slice(2); // Starting from C5
-  const students = extractStudentData(
-    rows.slice(5),
-    weekAndPreworkHeadings,
-    topicHeadings
-  ); // Student data starts from row 6
-
-  displayStudentList(students);
-  const dataForApi = {
-    classId: selectedClass,
-    students: students,
-  };
-
-  console.log('Data for Backend:', dataForApi);
+    displayStudentList(students);
+    const dataForApi = {
+      classId: selectedClass,
+      students: students,
+    };
+    if (dataForApi.students.length < 2) {
+      await postData('summary-sheets', dataForApi);
+    }
+  } catch (error) {
+    alert('Invalid data');
+  }
 }
 
 export function extractStudentData(

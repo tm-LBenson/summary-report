@@ -7,16 +7,18 @@
   </head>
   <body class="container mt-3">
     <!-- Class Selection Dropdown -->
-    <select id="classSelection" class="form-control mb-3">
+    <select id="classSelection" class="form-control mb-3 w-50">
       <option value="">Select Class</option>
       <!-- Class options will be added here -->
     </select>
+    <div id="classInputContainer"></div>
 
     <!-- Button to Add New Class -->
     <button id="addClassButton" class="btn btn-info mb-3">Add New Class</button>
 
     <!-- Textarea for Data Input -->
     <textarea
+      required
       id="courseData"
       class="form-control mb-3 w-50"
       placeholder="Paste entire spreadsheet data here"
