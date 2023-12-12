@@ -1,4 +1,5 @@
 'use strict';
+
 /**  script.js Main file for the modules  */
 import { addClass, createClassInputField } from './JS/classManagement.js';
 import { processData } from './JS/dataProcessing.js';
@@ -11,6 +12,7 @@ wakeUpBackend();
 document
   .getElementById('processDataButton')
   .addEventListener('click', processData);
+
 
 document
   .getElementById('toggleStudentsButton')
