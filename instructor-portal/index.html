@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Instructor Portal - Course Management</title>
+    <link rel="stylesheet" href="../bootstrap.min.css" />
+    <link rel="stylesheet" href="../styles.css" />
+    <link rel="icon" type="image/png" href="../CodeX-LogoBk.png" />
+  </head>
+  <body class="container mt-3">
+    <header class="my-4 text-center">
+      <img
+        src="../CodeX-LogoBk.png"
+        alt="Codex Academy Logo"
+        style="max-width: 150px"
+      />
+      <h1 class="my-3">Instructor Portal</h1>
+      <p>
+        Please use the specific spreadsheet template provided for course data.
+        Ensure no stray characters or notes are included outside of the standard
+        data cells. Any deviations from the template format may result in errors
+        during data processing.
+      </p>
+    </header>
+
+    <!-- Class Selection Dropdown -->
+    <select id="classSelection" class="form-control mb-3 w-50">
+      <option value="">Select Class</option>
+      <!-- Class options will be added here -->
+    </select>
+
+    <!-- Div for New Class Input -->
+    <div id="classInputContainer" class="mb-3">
+      <!-- Button to Add New Class -->
+    </div>
+    <button id="addClassButton" class="btn btn-info my-2">Add New Class</button>
+
+    <!-- Div for alert when successful update -->
+    <div id="alert-area"></div>
+
+    <!-- Textarea for Data Input -->
+    <textarea
+      required
+      id="courseData"
+      class="form-control mb-3 w-50"
+      placeholder="Paste entire spreadsheet data here"
+    ></textarea>
+
+    <!-- Process Data Button -->
+    <button id="processDataButton" class="btn btn-primary mb-3">
+      Process Data
+    </button>
+
+    <!-- JavaScript File -->
+    <script type="module" src="../JS/instructor-script.js"></script>
+  </body>
+</html>

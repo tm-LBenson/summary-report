@@ -4,9 +4,9 @@ import { addClass } from './classManagement.js';
 import { displayStudentList } from './uiManagement.js';
 import { getData } from './getData.js';
 
-export async function retrieveData() {
+export async function retrieveData(portal) {
   const data = await getData('summary-sheets');
- 
+
   // Store class data for easy retrieval
   const classDataMap = new Map();
 
@@ -22,6 +22,6 @@ export async function retrieveData() {
     .addEventListener('change', (event) => {
       const selectedClassId = event.target.value;
       const students = classDataMap.get(selectedClassId) || [];
-      displayStudentList(students); // Display students of the selected class
+      if (portal === 'staff') displayStudentList(students);
     });
 }
