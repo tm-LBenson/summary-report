@@ -1,21 +1,16 @@
 'use strict';
 
 /**  script.js Main file for the modules  */
-import { addClass, createClassInputField } from './JS/classManagement.js';
-import { processData } from './JS/dataProcessing.js';
-import { retrieveData } from './JS/retrieveData.js';
-import { toggleStudentList } from './JS/uiManagement.js';
-import { wakeUpBackend } from './JS/wakeUpBackend.js';
+import { addClass, createClassInputField } from './classManagement.js';
+import { processData } from './dataProcessing.js';
+import { retrieveData } from './retrieveData.js';
+import { wakeUpBackend } from './wakeUpBackend.js';
 
 wakeUpBackend();
 
 document
   .getElementById('processDataButton')
   .addEventListener('click', processData);
-
-document
-  .getElementById('toggleStudentsButton')
-  .addEventListener('click', toggleStudentList);
 
 document.getElementById('addClassButton').addEventListener('click', () => {
   if (!document.getElementById('newClassName')) {
