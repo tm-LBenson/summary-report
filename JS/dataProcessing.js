@@ -27,9 +27,9 @@ export async function processData() {
       classId: selectedClass,
       students: students,
     };
-    if (dataForApi.students.length < 2) {
-      await postData('summary-sheets', dataForApi);
-    }
+
+    console.log('sending data');
+    await postData('summary-sheets', dataForApi);
   } catch (error) {
     alert('Invalid data');
   }
