@@ -41,14 +41,22 @@ function displayStudentSummary(student) {
     let attendance = course.attendance;
     let catchUpTime;
     if (attendance !== 'N/A') {
-      let [attended, outOf] = attendance.split(' of ').map(Number);
+      let attendanceParts = attendance.split(' ');
+      let attended = Number(attendanceParts[0]);
+      let outOf = Number(attendanceParts[attendanceParts.length - 1]);
       totalAttendance += attended;
+
       // Calculate catch-up time
-      catchUpTime = course.result.includes(' out of ')
-        ? estimateCatchUpTime(...course.result.split(' out of ').map(Number))
-        : course.result === '0'
-        ? 60
-        : 0; // If '0', assume 60 minutes for catch-up time
+      let resultParts = course.result.split(' ');
+      catchUpTime =
+        resultParts.length > 1
+          ? estimateCatchUpTime(
+              Number(resultParts[0]),
+              Number(resultParts[resultParts.length - 1])
+            )
+          : course.result === '0'
+          ? 60
+          : 0; // If '0', assume 60 minutes for catch-up time
       totalCatchUpTime += catchUpTime;
       attendance = `${attended} of ${outOf}`;
     }
