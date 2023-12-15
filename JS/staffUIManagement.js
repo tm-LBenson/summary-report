@@ -115,10 +115,3 @@ export function toggleStudentList() {
   }
 }
 
-export function createAlert() {
-  const div = document.createElement('div');
-  div.innerHTML = `<div class="alert alert-success" role="alert">
-  Class data successfully updated!
-</div>`;
-  return div;
-}

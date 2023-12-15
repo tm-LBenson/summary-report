@@ -3,7 +3,7 @@
 /**  script.js Main file for the modules  */
 
 import { retrieveData } from './retrieveData.js';
-import { toggleStudentList } from './uiManagement.js';
+import { toggleStudentList } from './staffUIManagement.js';
 import { wakeUpBackend } from './wakeUpBackend.js';
 
 wakeUpBackend();

@@ -1,7 +1,7 @@
 'use strict';
 
 import { addClass } from './classManagement.js';
-import { displayStudentList } from './uiManagement.js';
+import { displayStudentList } from './staffUIManagement.js';
 import { getData } from './getData.js';
 
 export async function retrieveData(portal) {
