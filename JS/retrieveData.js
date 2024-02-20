@@ -3,6 +3,7 @@
 import { addClass } from './classManagement.js';
 import { displayStudentList } from './staffUIManagement.js';
 import { getData } from './getData.js';
+import { displayInstructorStudentList } from './instructorUIManagement.js';
 
 export async function retrieveData(portal) {
   const data = await getData('summary-sheets');
@@ -23,5 +24,8 @@ export async function retrieveData(portal) {
       const selectedClassId = event.target.value;
       const students = classDataMap.get(selectedClassId) || [];
       if (portal === 'staff') displayStudentList(students);
+      else {
+        displayInstructorStudentList(students, selectedClassId);
+      }
     });
 }
