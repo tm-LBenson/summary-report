@@ -1,18 +1,17 @@
 const catchupTime = {
-    absenceFactor: 120,
-    incompleteFactor: 60,
-    softFail: 120,
-    hardFail: 240
+  absenceFactor: 120,
+  incompleteFactor: 60,
+  softFail: 120,
+  hardFail: 240,
 };
-
 
 class AttendanceWeek {
   constructor({ week, topic, grade }) {
     this.week = week;
     this.topic = topic;
     this.grade = grade;
-    if (topic.toLowerCase() === "attendance") {
-      const rec = grade.split(" of ");
+    if (topic.toLowerCase() === 'attendance') {
+      const rec = grade.split(' of ');
       if (rec.length === 2) {
         this.total = parseInt(rec[1]);
         this.attended = parseInt(rec[0]);
@@ -21,7 +20,7 @@ class AttendanceWeek {
     }
   }
   static isAttendanceCell(cell) {
-    return cell.topic.toLowerCase() === "attendance";
+    return cell.topic.toLowerCase() === 'attendance';
   }
 }
 
@@ -30,49 +29,50 @@ class GradeWeek {
     this.week = week;
     this.topic = topic;
     this.grade = grade;
-    this.pass = grade === 'PASS';
-    if(!this.pass) {
-        const grade = this.grade;
-        this.incompleteAssignmentCount = 0;
-        if(grade === "0") {
-            // TODO: fix this magic number
-            // default missing assignment count is 5?
-            this.incompleteAssignmentCount = 5;
+    this.pass = grade === 'PASS' || grade === 'NOT-GRADED';
+    if (!this.pass) {
+      const grade = this.grade;
+      this.incompleteAssignmentCount = 0;
+      if (grade === '0') {
+        // TODO: fix this magic number
+        // default missing assignment count is 5?
+        this.incompleteAssignmentCount = 5;
+      }
+      console.log(grade);
+      const g = grade.split(' of ');
+      if (g.length === 2) {
+        const completed = parseInt(g[0], 10);
+        const total = parseInt(g[1], 10);
+        const missing = total - completed;
+        if (!isNaN(missing)) {
+          this.incompleteAssignmentCount = missing;
         }
-        console.log(grade);
-        const g = grade.split(" of ");
-        if(g.length === 2) {
-            const completed = parseInt(g[0], 10);
-            const total = parseInt(g[1], 10);
-            const missing = total - completed;
-            if(!isNaN(missing)) {
-                this.incompleteAssignmentCount = missing;
-            }
-        }
-
+      }
     }
-    this.missingAssignments 
+    this.missingAssignments;
   }
   static isGradeCell(cell) {
-    return cell.topic.toLowerCase() !== "attendance" && cell.topic && cell.week;
+    return cell.topic.toLowerCase() !== 'attendance' && cell.topic && cell.week;
   }
 }
 
-function calcWeekCatchup({grade, attendance}) {
-    let absence = 0;
-    if(grade.pass) {
-        return 0;
-    } else if(grade.grade.toLowerCase() === "soft fail") {
-        return catchupTime.softFail;
-    } else if (grade.grade.toLowerCase() === "hard fail") {
-        return catchupTime.hardFail;
-    }
-    if(attendance){
-        absence = attendance.total - attendance.attended;
-    }
-    let incompleteAssignmentCount = grade.incompleteAssignmentCount;
-    const estimatedMinutesForCatchup = absence * catchupTime.absenceFactor + incompleteAssignmentCount * catchupTime.incompleteFactor;
-    return estimatedMinutesForCatchup;
+function calcWeekCatchup({ grade, attendance }) {
+  let absence = 0;
+  if (grade.pass) {
+    return 0;
+  } else if (grade.grade.toLowerCase() === 'soft fail') {
+    return catchupTime.softFail;
+  } else if (grade.grade.toLowerCase() === 'hard fail') {
+    return catchupTime.hardFail;
+  }
+  if (attendance) {
+    absence = attendance.total - attendance.attended;
+  }
+  let incompleteAssignmentCount = grade.incompleteAssignmentCount;
+  const estimatedMinutesForCatchup =
+    absence * catchupTime.absenceFactor +
+    incompleteAssignmentCount * catchupTime.incompleteFactor;
+  return estimatedMinutesForCatchup;
 }
 
 class Student {
@@ -126,7 +126,7 @@ class Student {
         attendance: attendanceHash[grade.week],
       };
       const estimatedMinutesForCatchup = calcWeekCatchup(report);
-      this.totalEstimatedMinutesForCatchup+=estimatedMinutesForCatchup;
+      this.totalEstimatedMinutesForCatchup += estimatedMinutesForCatchup;
       report.estimatedMinutesForCatchup = estimatedMinutesForCatchup;
       weeklyReports.push(report);
     }
@@ -135,17 +135,19 @@ class Student {
 }
 
 function parseSheet(data) {
-    const weeks = data[0];
-    const topics = data[1];
-    const students = [];
-    for(let i=2;i<data.length;i++){
-        students.push(new Student({
-            weeks, 
-            topics, 
-            row: data[i]
-        }));
-    }
-    return students;
+  const weeks = data[0];
+  const topics = data[1];
+  const students = [];
+  for (let i = 2; i < data.length; i++) {
+    students.push(
+      new Student({
+        weeks,
+        topics,
+        row: data[i],
+      })
+    );
+  }
+  return students;
 }
 
 export { parseSheet };
