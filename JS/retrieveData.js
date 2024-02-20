@@ -23,8 +23,9 @@ export async function retrieveData(portal) {
     .addEventListener('change', (event) => {
       const selectedClassId = event.target.value;
       const students = classDataMap.get(selectedClassId) || [];
-      if (portal === 'staff') displayStudentList(students);
-      else {
+      if (portal === 'staff') {
+        displayStudentList(students);
+      } else {
         displayInstructorStudentList(students, selectedClassId);
       }
     });
