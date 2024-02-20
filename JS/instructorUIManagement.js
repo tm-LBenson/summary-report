@@ -1,7 +1,9 @@
 'use strict';
-/** uiManagement.js The purpose of this file is to handle all the user interface and items displayed within the browser */
 
-export function displayInstructorStudentList(students) {
+import { toggleStudentList } from './staffUIManagement.js';
+
+export function displayInstructorStudentList(students, classId) {
+  console.log(students);
   const studentListDiv = document.getElementById('studentList');
   studentListDiv.innerHTML = '';
 
@@ -12,13 +14,13 @@ export function displayInstructorStudentList(students) {
 
     button.onclick = () => {
       toggleStudentList();
-      return displayInstructorStudentSummary(student);
+      return displayStudentSummary(student, classId);
     };
     studentListDiv.appendChild(button);
   });
 }
 
-function displayInstructorStudentSummary(student) {
+function displayStudentSummary(student, classId) {
   const summaryDiv = document.getElementById('studentSummary');
   let totalCatchUpTime = 0;
   let totalAttendance = 0;
@@ -61,11 +63,14 @@ function displayInstructorStudentSummary(student) {
       attendance = `${attended} of ${outOf}`;
     }
 
+    const editButtonId = `edit-${course._id}`;
     // Render the course card
     summaryDiv.innerHTML += `
       <div class="col-md-6 mb-3">
         <div class="card">
-          <div class="card-header">${course.type} (${course.topic})</div>
+          <div class="card-header">${course.type} (${
+      course.topic
+    })         <button id=${editButtonId} class="badge bg-secondary">Edit</button></div>
           <div class="card-body">
             <p class="card-text">Result: ${course.result}</p>
             <p class="card-text">Attendance: ${attendance}</p>
@@ -76,6 +81,9 @@ function displayInstructorStudentSummary(student) {
             }
           </div>
         </div>
+      <script>
+      
+      </script>
       </div>`;
   });
 
@@ -92,8 +100,117 @@ function displayInstructorStudentSummary(student) {
       </div>
     </div>
   </div>`;
-
+  student.coursework.forEach((course) => {
+    console.log(course);
+    const editButtonId = `edit-${course._id}`;
+    const editButton = document.getElementById(editButtonId);
+    if (editButton) {
+      editButton.onclick = () => openEditModal(course._id, classId, course);
+    }
+  });
   summaryDiv.style.display = 'block';
+}
+
+function openEditModal(courseId, classId, courseData) {
+  const modal = document.getElementById('editModal');
+  const form = document.getElementById('editForm');
+
+  form.innerHTML = `
+  <h2>${courseData.type + '-' + courseData.topic}</h2>
+<form id="editForm" class="needs-validation" novalidate>
+  <input type="hidden" name="courseId" value="${courseId}">
+  <input type="hidden" name="classId" value="${classId}">
+
+  <div class="mb-3">
+    <label for="result" class="form-label">Result:</label>
+    <input type="text" class="form-control" name="result" id="result" value="${
+      courseData.result
+    }" required>
+    <div class="invalid-feedback">
+      Please provide a valid result.
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label for="attendance" class="form-label">Attendance:</label>
+    <input type="text" class="form-control" name="attendance" id="attendance" value="${
+      courseData.attendance
+    }" required>
+    <div class="invalid-feedback">
+      Please provide attendance information.
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label for="status" class="form-label">Status:</label>
+    <select class="form-select" name="status" id="status" required>
+      <option value="N/A" ${
+        courseData.status === 'N/A' ? 'selected' : ''
+      }>N/A</option>
+      <option value="PASS" ${
+        courseData.status === 'PASS' ? 'selected' : ''
+      }>PASS</option>
+      <option value="NOT GRADED" ${
+        courseData.status === 'NOT GRADED' ? 'selected' : ''
+      }>NOT GRADED</option>
+      <option value="SOFT-FAIL" ${
+        courseData.status === 'SOFT-FAIL' ? 'selected' : ''
+      }>SOFT-FAIL</option>
+      <option value="HARD-FAIL" ${
+        courseData.status === 'HARD-FAIL' ? 'selected' : ''
+      }>HARD-FAIL</option>
+    </select>
+    <div class="invalid-feedback">
+      Please select a status.
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label for="notes" class="form-label">Notes:</label>
+    <textarea class="form-control" name="notes" id="notes" rows="3" required>${
+      courseData.notes || ''
+    }</textarea>
+    <div class="invalid-feedback">
+      Please provide notes if applicable.
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>
+
+  `;
+
+  form.onsubmit = handleEditFormSubmit;
+
+  modal.style.display = 'block';
+  const closeButton = document.querySelector('.close');
+  closeButton.style.cursor = 'pointer';
+  closeButton.addEventListener('click', () => {
+    closeModal();
+  });
+}
+
+function handleEditFormSubmit(event) {
+  event.preventDefault();
+  const form = event.target;
+  const updatedCourseData = {
+    courseId: form.courseId.value,
+    classId: form.classId.value,
+    result: form.result.value,
+    attendance: form.attendance.value,
+    status: form.status.value,
+    notes: form.notes.value,
+  };
+
+  // Logic to update dataForApi with form data
+  console.log('Updated Data:', updatedCourseData);
+
+  closeModal();
+}
+
+function closeModal() {
+  const modal = document.getElementById('editModal');
+  modal.style.display = 'none';
 }
 
 function estimateCatchUpTime(completed, total) {
@@ -102,7 +219,6 @@ function estimateCatchUpTime(completed, total) {
   const timePerAssignment = 45; // Average time per assignment
   return assignmentsLeft * timePerAssignment; // Total catch up time
 }
-
 
 export function createAlert() {
   const div = document.createElement('div');
