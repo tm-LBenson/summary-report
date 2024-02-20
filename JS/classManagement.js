@@ -1,5 +1,7 @@
 'use strict';
 
+import { postData } from './postData.js';
+
 /** classManagement.js - Class management related functions */
 
 // Function to create a text input for the new class name
@@ -14,9 +16,10 @@ export function createClassInputField() {
 }
 
 // Function to add the class
-export function addClass(className, pageload = true) {
+export async function addClass(className, pageload = true) {
   let classSelect = document.getElementById('classSelection');
   let newOption = new Option(className, className);
   classSelect.add(newOption);
+  await postData('summary-sheets', { classId: className });
   if (!pageload) newOption.selected = true;
 }
