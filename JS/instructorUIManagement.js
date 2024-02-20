@@ -3,10 +3,9 @@
 import { toggleStudentList } from './staffUIManagement.js';
 
 export function displayInstructorStudentList(students, classId) {
-  console.log(students);
   const studentListDiv = document.getElementById('studentList');
   studentListDiv.innerHTML = '';
-
+  console.log('test');
   students.forEach((student) => {
     const button = document.createElement('button');
     button.classList.add('btn', 'btn-secondary', 'm-2');
@@ -101,7 +100,6 @@ function displayStudentSummary(student, classId) {
     </div>
   </div>`;
   student.coursework.forEach((course) => {
-    console.log(course);
     const editButtonId = `edit-${course._id}`;
     const editButton = document.getElementById(editButtonId);
     if (editButton) {
@@ -150,9 +148,9 @@ function openEditModal(courseId, classId, courseData) {
       <option value="PASS" ${
         courseData.status === 'PASS' ? 'selected' : ''
       }>PASS</option>
-      <option value="NOT GRADED" ${
-        courseData.status === 'NOT GRADED' ? 'selected' : ''
-      }>NOT GRADED</option>
+      <option value="NOT-GRADED" ${
+        courseData.status === 'NOT-GRADED' ? 'selected' : ''
+      }>NOT-GRADED</option>
       <option value="SOFT-FAIL" ${
         courseData.status === 'SOFT-FAIL' ? 'selected' : ''
       }>SOFT-FAIL</option>
