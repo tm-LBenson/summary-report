@@ -56,13 +56,17 @@
     <div id="studentList" class="mb-3"></div>
     <div id="studentSummary"></div>
 
-    <!-- Modal Structure -->
-
-    <div class="modal" tabindex="-1">
+    <div
+      class="modal fade"
+      id="add-topic"
+      tabindex="-1"
+      aria-labelledby="add-topicLabel"
+      aria-hidden="true"
+    >
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Modal title</h5>
+            <h1 class="modal-title fs-5" id="add-topicLabel">Add Topic</h1>
             <button
               type="button"
               class="btn-close"
@@ -71,7 +75,27 @@
             ></button>
           </div>
           <div class="modal-body">
-            <p>Modal body text goes here.</p>
+            <form id="add-new-form">
+              <label class="pb-1"
+                >Type Name:
+                <input
+                  class="form-control mb-3"
+                  type="text"
+                  name="type"
+                  id="type"
+                  placeholder="Week 1"
+              /></label>
+              <label class="pb-1"
+                >Topic Name:
+                <input
+                  class="form-control mb-3"
+                  type="text"
+                  name="topic"
+                  id="topic"
+                  placeholder="DEV-TOOLS"
+                />
+              </label>
+            </form>
           </div>
           <div class="modal-footer">
             <button
@@ -81,41 +105,18 @@
             >
               Close
             </button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Modal title</h5>
             <button
-              type="button"
-              class="btn-close"
+              id="add-topic-btn"
               data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <p>Modal body text goes here.</p>
-          </div>
-          <div class="modal-footer">
-            <button
               type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
+              class="btn btn-primary"
             >
-              Close
+              Save changes
             </button>
-            <button type="button" class="btn btn-primary">Save changes</button>
           </div>
         </div>
       </div>
     </div>
-
     <div tabindex="-1" id="editModal" class="modal" style="display: none">
       <div class="modal-dialog">
         <!-- Modal content -->
@@ -129,6 +130,11 @@
         </div>
       </div>
     </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+      integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+      crossorigin="anonymous"
+    ></script>
     <script type="module" src="../JS/instructor-script.js"></script>
   </body>
 </html>

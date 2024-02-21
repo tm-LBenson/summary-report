@@ -1,6 +1,7 @@
 export async function getData(
   endPoint = '',
-  url = 'https://astro-server-z1u9.onrender.com/'
+  // url = 'https://astro-server-z1u9.onrender.com/'
+  url = 'http://localhost:3002/'
 ) {
   // Default options are marked with *
   const response = await fetch(url + endPoint, {

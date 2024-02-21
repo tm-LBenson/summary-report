@@ -76,7 +76,7 @@ function displayStudentSummary(student) {
             }
                   ${
                     course.notes[0]
-                      ? `<p class="card-text">Notes: ${course.notes[0]?.note}</p>`
+                      ? `<p class="card-text">Notes: ${course.notes}</p>`
                       : ''
                   }
           </div>
