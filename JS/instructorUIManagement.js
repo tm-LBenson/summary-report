@@ -1,6 +1,7 @@
 'use strict';
 
 import { patchData } from './patchData.js';
+import { postData } from './postData.js';
 import { toggleStudentList } from './staffUIManagement.js';
 
 export function displayInstructorStudentList(students, classId) {
@@ -79,11 +80,7 @@ function displayStudentSummary(student, classId) {
                 ? `<p class="card-text">Estimated catch-up time: ${catchUpTime} minutes</p>`
                 : ''
             }
-        ${
-          course.notes[0]
-            ? `<p class="card-text">Notes: ${course.notes[0]?.note}</p>`
-            : ''
-        }
+        ${course.notes ? `<p class="card-text">Notes: ${course.notes}</p>` : ''}
            
           </div>
         </div>
@@ -95,6 +92,9 @@ function displayStudentSummary(student, classId) {
 
   // Add notes and summary
   summaryDiv.innerHTML += `
+ <button id="new-topic type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-topic">
+  Add Topic
+</button>
     <div class="col-md-12 mb-3">
       <div class="card">
         <div class="card-header">Notes and Summary</div>
@@ -106,6 +106,7 @@ function displayStudentSummary(student, classId) {
       </div>
     </div>
   </div>`;
+
   student.coursework.forEach((course) => {
     const editButtonId = `edit-${course._id}`;
     const editButton = document.getElementById(editButtonId);
@@ -121,6 +122,23 @@ function displayStudentSummary(student, classId) {
     }
   });
   summaryDiv.style.display = 'block';
+  const newTopicBtn = document.querySelector('#add-topic-btn');
+  newTopicBtn.addEventListener('click', async () => {
+    const newForm = document.querySelector('#add-new-form');
+    const newTopic = {
+      classId,
+      studentEmail: student.email,
+      coursework: {
+        status: 'N/A',
+        result: '0 of 0',
+        attendance: '0 of 0',
+        notes: '',
+        topic: newForm.topic.value,
+        type: newForm.type.value,
+      },
+    };
+    await postData('summary-sheets/student/coursework', newTopic);
+  });
 }
 
 function openEditModal(courseType, courseTopic, classId, courseData, email) {
@@ -216,7 +234,7 @@ async function handleEditFormSubmit(event) {
       result: form.result.value,
       attendance: form.attendance.value,
       status: form.status.value,
-      notes: [{ class: form.courseTopic.value, note: form.notes.value }],
+      notes: form.notes.value,
     },
   };
 

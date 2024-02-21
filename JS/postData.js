@@ -1,7 +1,8 @@
 export async function postData(
   endPoint = '',
   data = {},
-  url = 'https://astro-server-z1u9.onrender.com/'
+  // url = 'https://astro-server-z1u9.onrender.com/'
+  url = 'http://localhost:3002/'
 ) {
   try {
     const response = await fetch(url + endPoint, {
