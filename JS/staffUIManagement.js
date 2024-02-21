@@ -74,6 +74,11 @@ function displayStudentSummary(student) {
                 ? `<p class="card-text">Estimated catch-up time: ${catchUpTime} minutes</p>`
                 : ''
             }
+                  ${
+                    course.notes[0]
+                      ? `<p class="card-text">Notes: ${course.notes[0]?.note}</p>`
+                      : ''
+                  }
           </div>
         </div>
       </div>`;
@@ -114,4 +119,3 @@ export function toggleStudentList() {
     toggleButton.textContent = 'Show Students';
   }
 }
-

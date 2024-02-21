@@ -1,12 +1,13 @@
 'use strict';
 
+import { patchData } from './patchData.js';
 import { toggleStudentList } from './staffUIManagement.js';
 
 export function displayInstructorStudentList(students, classId) {
   const studentListDiv = document.getElementById('studentList');
   studentListDiv.innerHTML = '';
-  console.log('test');
   students.forEach((student) => {
+    console.log(student);
     const button = document.createElement('button');
     button.classList.add('btn', 'btn-secondary', 'm-2');
     button.innerText = student.name;
@@ -78,6 +79,12 @@ function displayStudentSummary(student, classId) {
                 ? `<p class="card-text">Estimated catch-up time: ${catchUpTime} minutes</p>`
                 : ''
             }
+        ${
+          course.notes[0]
+            ? `<p class="card-text">Notes: ${course.notes[0]?.note}</p>`
+            : ''
+        }
+           
           </div>
         </div>
       <script>
@@ -103,20 +110,29 @@ function displayStudentSummary(student, classId) {
     const editButtonId = `edit-${course._id}`;
     const editButton = document.getElementById(editButtonId);
     if (editButton) {
-      editButton.onclick = () => openEditModal(course._id, classId, course);
+      editButton.onclick = () =>
+        openEditModal(
+          course.type,
+          course.topic,
+          classId,
+          course,
+          student.email
+        );
     }
   });
   summaryDiv.style.display = 'block';
 }
 
-function openEditModal(courseId, classId, courseData) {
+function openEditModal(courseType, courseTopic, classId, courseData, email) {
   const modal = document.getElementById('editModal');
   const form = document.getElementById('editForm');
 
   form.innerHTML = `
   <h2>${courseData.type + '-' + courseData.topic}</h2>
 <form id="editForm" class="needs-validation" novalidate>
-  <input type="hidden" name="courseId" value="${courseId}">
+  <input type="hidden" name="courseType" value="${courseType}">
+  <input type="hidden" name="studentEmail" value="${email}">
+  <input type="hidden" name="courseTopic" value="${courseTopic}">
   <input type="hidden" name="classId" value="${classId}">
 
   <div class="mb-3">
@@ -165,7 +181,7 @@ function openEditModal(courseId, classId, courseData) {
 
   <div class="mb-3">
     <label for="notes" class="form-label">Notes:</label>
-    <textarea class="form-control" name="notes" id="notes" rows="3" required>${
+    <textarea class="form-control" name="notes" id="notes" rows="3">${
       courseData.notes || ''
     }</textarea>
     <div class="invalid-feedback">
@@ -188,21 +204,28 @@ function openEditModal(courseId, classId, courseData) {
   });
 }
 
-function handleEditFormSubmit(event) {
+async function handleEditFormSubmit(event) {
   event.preventDefault();
   const form = event.target;
   const updatedCourseData = {
-    courseId: form.courseId.value,
     classId: form.classId.value,
-    result: form.result.value,
-    attendance: form.attendance.value,
-    status: form.status.value,
-    notes: form.notes.value,
+    studentEmail: form.studentEmail.value,
+    type: form.courseType.value,
+    topic: form.courseTopic.value,
+    updates: {
+      result: form.result.value,
+      attendance: form.attendance.value,
+      status: form.status.value,
+      notes: [{ class: form.courseTopic.value, note: form.notes.value }],
+    },
   };
 
   // Logic to update dataForApi with form data
-  console.log('Updated Data:', updatedCourseData);
-
+  const response = await patchData(
+    'summary-sheets/student/coursework',
+    updatedCourseData
+  );
+  console.log(response);
   closeModal();
 }
 
