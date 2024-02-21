@@ -1,21 +1,21 @@
-export async function postData(
+export async function patchData(
   endPoint = '',
   data = {},
   url = 'https://astro-server-z1u9.onrender.com/'
 ) {
   try {
     const response = await fetch(url + endPoint, {
-      method: 'POST',
+      method: 'PATCH',
       mode: 'cors',
       cache: 'no-cache',
       credentials: 'same-origin',
       headers: {
         'Content-Type': 'application/json',
       },
-      redirect: 'follow',
       referrerPolicy: 'no-referrer',
       body: JSON.stringify(data),
     });
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }

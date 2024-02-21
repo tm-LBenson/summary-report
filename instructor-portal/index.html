@@ -49,8 +49,86 @@
     <button id="processDataButton" class="btn btn-primary mb-3">
       Process Data
     </button>
+    <button id="toggleStudentsButton" class="btn btn-secondary mb-3">
+      Hide Students
+    </button>
+    <!-- Divs for Displaying Data -->
+    <div id="studentList" class="mb-3"></div>
+    <div id="studentSummary"></div>
 
-    <!-- JavaScript File -->
+    <!-- Modal Structure -->
+
+    <div class="modal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Modal title</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>Modal body text goes here.</p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Modal title</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>Modal body text goes here.</p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div tabindex="-1" id="editModal" class="modal" style="display: none">
+      <div class="modal-dialog">
+        <!-- Modal content -->
+        <div class="modal-content">
+          <span aria-label="Close" class="close">&times;</span>
+          <div class="modal-body">
+            <form id="editForm">
+              <!-- Form fields will be populated dynamically -->
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
     <script type="module" src="../JS/instructor-script.js"></script>
   </body>
 </html>

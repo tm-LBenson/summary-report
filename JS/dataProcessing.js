@@ -1,10 +1,11 @@
 'use strict';
+import { createAlert } from './instructorUIManagement.js';
 /** dataProcessing.js The purpose of this file is to contain all the dataProcessing functions 
  the spreadsheet inserted will be split apart, the data extracted, everything is placed in datastructures that allow the backend to handle it data easily for the DB
 */
 
 import { postData } from './postData.js';
-import { createAlert } from './uiManagement.js';
+
 export async function processData() {
   const selectedClass = document.getElementById('classSelection').value;
   if (!selectedClass) {
@@ -32,10 +33,11 @@ export async function processData() {
     console.log('sending data');
     await postData('summary-sheets', dataForApi);
 
-    document.querySelector('#alert-area').appendChild(createAlert());
+    const alertArea = document.querySelector('#alert-area');
+    const alert = createAlert();
+    alertArea.appendChild(alert);
     setTimeout(() => {
-      console.log('redirecting');
-      window.location.href = '../staff-portal/';
+      alert.remove();
     }, 2600);
   } catch (error) {
     console.error(error);

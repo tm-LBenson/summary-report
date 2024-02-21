@@ -1,14 +1,15 @@
+export function weeklyReportHTML({
+  grade,
+  attendance,
+  estimatedMinutesForCatchup,
+}) {
+  const { week, topic } = grade;
+  const result = grade.grade;
+  const minutes = estimatedMinutesForCatchup;
 
+  const attendanceText = attendance ? attendance.grade : 'N/A';
 
-export function weeklyReportHTML({grade, attendance, estimatedMinutesForCatchup
-}){
-    const {week, topic} = grade;
-    const result = grade.grade;
-    const minutes = estimatedMinutesForCatchup;
-    const pass = grade.pass;
-    const attendanceText = attendance ? attendance.grade : "N/A";
-
-    return `
+  return `
         <div class="card">
             <div class="card-header">
                 ${week} / ${topic}
@@ -25,14 +26,14 @@ export function weeklyReportHTML({grade, attendance, estimatedMinutesForCatchup
                 </p>
             </div>
         </div>
-    `
+    `;
 }
 
-export function summaryReportHTML(student){
-    const totalCatchUpTime = student.totalEstimatedMinutesForCatchup;
-    const totalAttendance = student.totalAttendanceCount;
-    const possibleAttendance = student.maxAttendanceCount
-    return `
+export function summaryReportHTML(student) {
+  const totalCatchUpTime = student.totalEstimatedMinutesForCatchup;
+  const totalAttendance = student.totalAttendanceCount;
+  const possibleAttendance = student.maxAttendanceCount;
+  return `
       <div class="col-md-12 mb-3">
         <div class="card">
           <div class="card-header">Notes and Summary</div>
