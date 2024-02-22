@@ -1,7 +1,18 @@
 import Header from '@/components/Header';
 import PortalEntry from '@/components/PortalEntry';
+import axios from 'axios';
 
-export default function Home() {
+async function wakeUpBackend() {
+  await axios.get('https://astro-server-z1u9.onrender.com');
+}
+
+export default async function Home() {
+  try {
+    // Send a request to the backend to prevent cold start.
+    await wakeUpBackend();
+  } catch (error) {
+    console.error('Could not wake up backend :(');
+  }
   return (
     <>
       <Header
@@ -13,13 +24,13 @@ export default function Home() {
           link={'instructor-portal'}
           location={'Instructor Portal'}
           portalDescription="Manage your classes and coursework"
-          bg="bg-red-400"
+          colors={['bg-red-400', 'hover:bg-red-700', 'focus:bg-red-700']}
         />
         <PortalEntry
           link={'staff-portal'}
           location={'Staff Portal'}
           portalDescription="View student progress and insights."
-          bg="bg-slate-400"
+          colors={['bg-slate-400', 'hover:bg-slate-700', 'focus:bg-slate-700']}
         />
       </main>
     </>
