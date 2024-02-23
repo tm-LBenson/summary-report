@@ -4,7 +4,7 @@ export function processData(rawData, selectedClass) {
 
     const weekAndPreworkHeadings = rows[0]?.slice(2); // Starting from C4
     const topicHeadings = rows[1]?.slice(2); // Starting from C5
-    const studentsData = rows.slice(5); // Student data starts from row 6
+    const studentsData = rows.slice(2); // Student data starts from row 6
     console.log(weekAndPreworkHeadings, topicHeadings);
     const students = extractStudentData(
       studentsData,
