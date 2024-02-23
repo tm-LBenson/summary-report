@@ -7,7 +7,7 @@ export default function MainContent({
   allowEdit,
 }) {
   return (
-    <main className="ml-64 p-8 w-full">
+    <main className="ml-28 p-8 w-full">
       {selectedStudent && displayedData ? (
         <>
           <h2 className="text-xl text-center font-bold mb-4">
