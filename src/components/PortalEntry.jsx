@@ -1,7 +1,12 @@
 import Link from 'next/link';
 import React from 'react';
 
-export default function PortalEntry({ portalDescription, location, link, bg }) {
+export default function PortalEntry({
+  portalDescription,
+  location,
+  link,
+  colors,
+}) {
   return (
     <section className="flex flex-col items-center gap-14 mt-20">
       <div className="flex flex-col items-center gap-8">
@@ -9,7 +14,9 @@ export default function PortalEntry({ portalDescription, location, link, bg }) {
         <p>{portalDescription}</p>
       </div>
       <Link
-        className={`border text-white text-4xl p-5 ${bg} rounded-lg outline-none`}
+        className={`border text-white text-4xl p-5 ${colors.join(
+          ' '
+        )} rounded-lg outline-none`}
         href={link}
       >
         Go to {location}
