@@ -50,7 +50,6 @@ export default function Page() {
   }, [selectedClass, classData]);
 
   useEffect(() => {
-    console.log('display effect');
     const selectedData = classData.find(
       (element) => element.classId === selectedClass
     );
@@ -60,6 +59,17 @@ export default function Page() {
   const handleStudentClick = (student) => {
     setSelectedStudent(student);
   };
+
+  async function handleAddCoursework(newCourseData) {
+    await axios.post(
+      'https://astro-server-z1u9.onrender.com/summary-sheets/student/coursework',
+      newCourseData
+    );
+    const response = await axios.get(
+      'https://astro-server-z1u9.onrender.com/summary-sheets'
+    );
+    setClassData(response.data);
+  }
 
   async function submitSpreadsheet(parsedSpreadsheetData) {
     await axios.post(
@@ -102,6 +112,7 @@ export default function Page() {
               selectedStudent={selectedStudent}
               displayedData={displayedData}
               allowEdit={true}
+              onAddCoursework={handleAddCoursework}
               selectedClass={selectedClass}
               onCourseUpdate={handleCourseUpdate}
             />

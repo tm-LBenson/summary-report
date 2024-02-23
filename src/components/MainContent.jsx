@@ -7,6 +7,7 @@ export default function MainContent({
   allowEdit,
   selectedClass,
   onCourseUpdate,
+  onAddCoursework,
 }) {
   return (
     <main className="ml-28 p-8 w-full">
@@ -21,6 +22,7 @@ export default function MainContent({
             student={selectedStudent}
             selectedClass={selectedClass}
             displayedData={displayedData}
+            onAddCoursework={onAddCoursework}
           />
         </>
       ) : (

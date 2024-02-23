@@ -22,7 +22,7 @@ const CourseworkCard = ({
       notes: course.notes,
     },
   });
-  console.log(displayedData);
+
   const resultTagColor = (result) => {
     switch (result) {
       case 'PASS':
