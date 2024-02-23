@@ -1,11 +1,11 @@
 import CourseworkCard from './CourseworkCard';
 
-const StudentSummary = ({ student }) => {
+const StudentSummary = ({ student, allowEdit }) => {
   return (
     <div className="flex flex-wrap justify-center">
       {console.log(student)}
       {student.coursework?.map((course, index) => (
-        <CourseworkCard key={index} course={course} />
+        <CourseworkCard allowEdit={allowEdit} key={index} course={course} />
       ))}
     </div>
   );

@@ -1,7 +1,11 @@
 import React from 'react';
 import StudentSummary from './StudentSummary';
 
-export default function MainContent({ selectedStudent, displayedData }) {
+export default function MainContent({
+  selectedStudent,
+  displayedData,
+  allowEdit,
+}) {
   return (
     <main className="ml-64 p-8 w-full">
       {selectedStudent && displayedData ? (
@@ -9,7 +13,7 @@ export default function MainContent({ selectedStudent, displayedData }) {
           <h2 className="text-xl text-center font-bold mb-4">
             Student: {selectedStudent.name} - Coursework Details
           </h2>
-          <StudentSummary student={selectedStudent} />
+          <StudentSummary allowEdit={allowEdit} student={selectedStudent} />
         </>
       ) : (
         <p className="text-center">
