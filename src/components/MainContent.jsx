@@ -5,6 +5,8 @@ export default function MainContent({
   selectedStudent,
   displayedData,
   allowEdit,
+  selectedClass,
+  onCourseUpdate,
 }) {
   return (
     <main className="ml-28 p-8 w-full">
@@ -13,7 +15,13 @@ export default function MainContent({
           <h2 className="text-xl text-center font-bold mb-4">
             Student: {selectedStudent.name} - Coursework Details
           </h2>
-          <StudentSummary allowEdit={allowEdit} student={selectedStudent} />
+          <StudentSummary
+            onCourseUpdate={onCourseUpdate}
+            allowEdit={allowEdit}
+            student={selectedStudent}
+            selectedClass={selectedClass}
+            displayedData={displayedData}
+          />
         </>
       ) : (
         <p className="text-center">

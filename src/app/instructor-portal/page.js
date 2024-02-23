@@ -11,6 +11,26 @@ export default function Page() {
   const [selectedClass, setSelectedClass] = useState('');
   const [displayedData, setDisplayedData] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
+  const handleCourseUpdate = async (updatedCourse) => {
+    try {
+      await axios.patch(
+        'https://astro-server-z1u9.onrender.com/summary-sheets/student/coursework',
+        updatedCourse
+      );
+      const response = await axios.get(
+        'https://astro-server-z1u9.onrender.com/summary-sheets'
+      );
+      setClassData(response.data);
+      const updatedDisplayData = response.data.find(
+        (element) => element.classId === selectedClass
+      );
+      if (updatedDisplayData) {
+        setDisplayedData(updatedDisplayData);
+      }
+    } catch (error) {
+      console.error('Failed to update course', error);
+    }
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -30,6 +50,7 @@ export default function Page() {
   }, [selectedClass, classData]);
 
   useEffect(() => {
+    console.log('display effect');
     const selectedData = classData.find(
       (element) => element.classId === selectedClass
     );
@@ -49,7 +70,6 @@ export default function Page() {
       'https://astro-server-z1u9.onrender.com/summary-sheets'
     );
     setClassData(response.data);
-    console.log('Updated Backend');
   }
 
   return (
@@ -78,9 +98,12 @@ export default function Page() {
           />
           <div className="flex flex-col align-center">
             <MainContent
-              allowEdit={true}
+              key={selectedStudent?._id || 'no-student'}
               selectedStudent={selectedStudent}
               displayedData={displayedData}
+              allowEdit={true}
+              selectedClass={selectedClass}
+              onCourseUpdate={handleCourseUpdate}
             />
           </div>
         </div>
