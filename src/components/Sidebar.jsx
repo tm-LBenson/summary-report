@@ -1,13 +1,40 @@
+import React, { useState } from 'react';
+
 export default function Sidebar({
   classData,
   displayedData,
   handleStudentClick,
   setSelectedClass,
 }) {
+  const [isOpen, setIsOpen] = useState(true);
+
+  const toggleDrawer = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <>
-    
-      <aside className="w-64 h-screen fixed top-0 overflow-y-auto bg-gray-100 p-5">
+      {/* Position the toggle button independently outside the sidebar */}
+      <div
+        className={`fixed top-5 z-30 ${
+          isOpen ? 'left-[256px]' : 'left-0'
+        } transition-all duration-300 ease-in-out`}
+      >
+        <button
+          onClick={toggleDrawer}
+          className={`bg-blue-500 relative ${
+            isOpen ? 'right-2 ' : 'left-1'
+          } text-white p-2 rounded-full focus:outline-none`}
+        >
+          {isOpen ? '>' : '<'}
+        </button>
+      </div>
+
+      <aside
+        className={`w-64 h-screen fixed top-0 ${
+          isOpen ? 'left-0' : '-left-64'
+        } overflow-y-auto bg-gray-100 p-5 transition-all duration-300 ease-in-out`}
+      >
         <div>
           <select
             onChange={(e) => setSelectedClass(e.target.value)}
