@@ -12,7 +12,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${inter.className} relative text-2xl px-0 mx-0 container`}
+        className={`${inter.className} w-screen relative text-2xl px-0 mx-0`}
       >
         {children}
       </body>

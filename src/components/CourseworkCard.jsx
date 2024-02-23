@@ -1,9 +1,27 @@
 import EditForm from '@/app/instructor-portal/components/EditForm';
 import React, { useState } from 'react';
 
-const CourseworkCard = ({ course, allowEdit, updateCoursework }) => {
+const CourseworkCard = ({
+  course,
+  student,
+  allowEdit,
+  selectedClass,
+  onCourseUpdate,
+  displayedData,
+}) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [editedCourse, setEditedCourse] = useState(course);
+  const [editedCourse, setEditedCourse] = useState({
+    classId: selectedClass,
+    studentEmail: student.email,
+    type: course.type,
+    topic: course.topic,
+    updates: {
+      result: course.result,
+      attendance: course.attendance,
+      status: course.status,
+      notes: course.notes,
+    },
+  });
 
   const resultTagColor = (result) => {
     switch (result) {
@@ -18,25 +36,36 @@ const CourseworkCard = ({ course, allowEdit, updateCoursework }) => {
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
-    setEditedCourse((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+
+    if (['result', 'attendance', 'status', 'notes'].includes(name)) {
+      setEditedCourse((prev) => ({
+        ...prev,
+        updates: {
+          ...prev.updates,
+          [name]: value,
+        },
+      }));
+    } else {
+      setEditedCourse((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const handleCancel = () => {
     setIsEditing(false);
-    setEditedCourse(course); // Reset changes
+    setEditedCourse(course);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    updateCoursework(editedCourse);
+    onCourseUpdate(editedCourse);
     setIsEditing(false);
   };
 
   return (
-    <div className="w-2/3 rounded overflow-hidden shadow-lg bg-white m-4 pb-8">
+    <div className="w-1/3 rounded overflow-hidden shadow-lg bg-white m-4 pb-8">
       <form onSubmit={handleSubmit} className="px-6 flex flex-col gap-4 py-4">
         {isEditing ? (
           <EditForm

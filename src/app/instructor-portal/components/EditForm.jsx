@@ -24,20 +24,20 @@ export default function EditForm({
       <input
         type="text"
         name="result"
-        value={editedCourse.result}
+        value={editedCourse.updates?.result}
         onChange={handleEditChange}
         className={`mb-2 p-2 border rounded`}
       />
       <input
         type="text"
         name="attendance"
-        value={editedCourse.attendance}
+        value={editedCourse.updates?.attendance}
         onChange={handleEditChange}
         className="mb-2 p-2 border rounded"
       />
       <textarea
         name="notes"
-        value={editedCourse.notes}
+        value={editedCourse.updates?.notes}
         onChange={handleEditChange}
         className="mb-2 p-2 border rounded"
         rows="3"
