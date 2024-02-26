@@ -44,7 +44,10 @@ function buildStudents(topics, rows) {
     for (const topic of topics) {
       let i = topic.index;
       let topicName = topic.name;
-      let result = record[i];
+      let resultRaw = record[i];
+      let score = parseFloat(resultRaw);
+      let outOfFive = (score / 20).toFixed(1);
+      let result = `${outOfFive} of 5`;
       coursework.push({
         type: topicName,
         topic: topicName,
